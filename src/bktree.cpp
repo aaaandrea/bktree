@@ -33,7 +33,8 @@ using HasReturnType = typename std::is_same<Ret, ReturnType<Fn, Args...>>::type;
 // - StdoutRep must have an overloaded operator<<(std::ostream&, StdoutRep<T>)
 template <typename T> struct StdoutRep;
 
-template <> struct StdoutRep<std::uint32_t> {
+template <> struct StdoutRep<std::uint32_t>
+{
   StdoutRep(std::uint32_t v) : value(v) {}
 
   friend std::ostream& operator<<(std::ostream& out, StdoutRep rep) {
@@ -61,7 +62,8 @@ template <typename T> auto makeStdoutRep(const T& v) { return StdoutRep<T>(v); }
 //  - d(x, y) = 0 <=> x = y
 //  - d(x, y) = d(y, x)
 //  - d(x, z) <= d(x, y) + d(y, z)
-template <typename T, typename Distance> class BKTree {
+template <typename T, typename Distance> class BKTree
+{
 private:
   using DistanceReturnType = ReturnType<Distance, T, T>;
 
@@ -78,7 +80,8 @@ private:
 
     // Sorts the sub-tree parallel arrays by edge representation.
     // Builds index vector sorted by edges, then reorders via indices.
-    void sort() {
+    void sort()
+    {
       const auto len = edges.size();
 
       if (len < 2)
@@ -94,7 +97,8 @@ private:
       sortedEdges.reserve(len);
       sortedChildren.reserve(len);
 
-      for (std::size_t idx = 0; idx < len; ++idx) {
+      for (std::size_t idx = 0; idx < len; ++idx)
+      {
         sortedEdges.push_back(std::move(edges[index[idx]]));
         sortedChildren.push_back(std::move(children[index[idx]]));
       }
@@ -121,7 +125,8 @@ private:
   // pre-conditions sort() must be called. Inserting all values and sorting
   // afterwards avoids us having to re-sort after inserting each value.
 
-  void insert(T value) {
+  void insert(T value)
+  {
     if (root)
       insert(*root, std::move(value));
     else
@@ -132,11 +137,13 @@ private:
     std::for_each(first, last, [this](auto v) { this->insert(v); });
   }
 
-  void insert(Node& node, T value) {
+  void insert(Node& node, T value)
+  {
     std::stack<Node*> recursion;
     recursion.push(&node);
 
-    while (!recursion.empty()) {
+    while (!recursion.empty())
+    {
       auto next = recursion.top();
       recursion.pop();
 
@@ -146,7 +153,8 @@ private:
       // Or there is a subtree with this distance, recurse down
       auto it = std::find(begin(next->edges), end(next->edges), dist);
 
-      if (it == end(next->edges)) {
+      if (it == end(next->edges))
+      {
         next->edges.push_back(std::move(dist));
         next->children.push_back(Node{std::move(value)});
       } else {
@@ -159,20 +167,23 @@ private:
   // Sorting the tree is required for doing binary searches on the edge representations.
   // Needs to be called after bulk-insertion and before querying for nearest neighbors.
   // Walks the tree recursively sorting all node's childrens by edge representation.
-  void sort() {
+  void sort()
+  {
     if (!root)
       return;
 
     std::stack<Node*> recursion;
     recursion.push(root.get());
 
-    while (!recursion.empty()) {
+    while (!recursion.empty())
+    {
       auto next = recursion.top();
       recursion.pop();
 
       next->sort();
 
-      for (std::size_t at = 0; at < next->edges.size(); ++at) {
+      for (std::size_t at = 0; at < next->edges.size(); ++at)
+      {
         recursion.push(&next->children[at]);
       }
     }
@@ -185,11 +196,13 @@ private:
   // Note: pre-condition for nearest neighbor queries is a sorted tree. We need the
   // edge representations to be sorted for doing binary searches on them. See sort().
 
-  template <typename OutputIt> void nearest(const Node& node, const T& value, std::size_t delta, OutputIt out) const {
+  template <typename OutputIt> void nearest(const Node& node, const T& value, std::size_t delta, OutputIt out) const
+  {
     std::stack<const Node*> recursion;
     recursion.push(&node);
 
-    while (!recursion.empty()) {
+    while (!recursion.empty())
+    {
       auto next = recursion.top();
       recursion.pop();
 
@@ -206,7 +219,8 @@ private:
       const auto first = std::lower_bound(begin(next->edges), end(next->edges), minDist);
       const auto last = std::upper_bound(first, end(next->edges), maxDist);
 
-      for (auto it = first; it != last; ++it) {
+      for (auto it = first; it != last; ++it)
+      {
         auto at = std::distance(first, it);
         recursion.push(&next->children[at]);
       }
@@ -215,13 +229,15 @@ private:
 
   // Printing happens by traversing the tree following edges recursively.
 
-  void printTextToStdout(const Node& node) const {
+  void printTextToStdout(const Node& node) const
+  {
     using Indentation = std::size_t;
 
     std::stack<std::pair<const Node*, Indentation>> recursion;
     recursion.push(std::make_pair(&node, 0));
 
-    while (!recursion.empty()) {
+    while (!recursion.empty())
+    {
       auto next = recursion.top();
       recursion.pop();
 
@@ -229,20 +245,23 @@ private:
 
       std::cout << std::string(next.second, ' ') << "- Node: [ " << valueRep << " ] with Edges: [ ";
 
-      for (auto dist : next.first->edges) {
+      for (auto dist : next.first->edges)
+      {
         const auto distRep = makeStdoutRep(dist);
         std::cout << distRep << ' ';
       }
 
       std::cout << "]" << std::endl;
 
-      for (const auto& child : next.first->children) {
+      for (const auto& child : next.first->children)
+      {
         recursion.push(std::make_pair(&child, next.second + 4));
       }
     }
   }
 
-  void printDotToStdout(const Node& node) const {
+  void printDotToStdout(const Node& node) const
+  {
     std::stack<const Node*> recursion;
     recursion.push(&node);
 
@@ -252,7 +271,8 @@ private:
       auto next = recursion.top();
       recursion.pop();
 
-      for (std::size_t at = 0; at < next->edges.size(); ++at) {
+      for (std::size_t at = 0; at < next->edges.size(); ++at)
+      {
         const auto& edge = next->edges[at];
         const auto& child = next->children[at];
 
@@ -272,7 +292,8 @@ private:
 public:
   // Constructs a BK-Tree based on a range of items and a distance function for pairs of items
   template <typename InputIt> //
-  BKTree(InputIt first, InputIt last, const Distance& distance_ = Distance()) : distance{distance_} {
+  BKTree(InputIt first, InputIt last, const Distance& distance_ = Distance()) : distance{distance_}
+  {
     insert(first, last);
     sort();
   }
@@ -280,7 +301,8 @@ public:
   // Queries the BK-Tree for items with a distance of at most delta away from value.
   // Writes results into out. Results are not sorted by distance.
   template <typename OutputIt> //
-  void nearest(const T& value, const DistanceReturnType delta, OutputIt out) const {
+  void nearest(const T& value, const DistanceReturnType delta, OutputIt out) const
+  {
     if (root)
       nearest(*root, value, delta, out);
   }
@@ -288,7 +310,8 @@ public:
   // Queries the BK-Tree for items with a distance of at most delta away from value.
   // Writes the n best results sorted by distance into out.
   template <typename OutputIt> //
-  void nearest(const T& value, const DistanceReturnType delta, std::size_t n, OutputIt out) const {
+  void nearest(const T& value, const DistanceReturnType delta, std::size_t n, OutputIt out) const
+  {
     std::vector<T> near;
     near.reserve(n);
 
@@ -305,14 +328,16 @@ public:
   }
 
   // Outputs the BK-Tree to stdout.
-  void printTextToStdout() const {
+  void printTextToStdout() const
+  {
     if (root)
       printTextToStdout(*root);
   }
 
   // Outputs the BK-Tree in DOT format to stdout.
   // dot -Tsvg -Grankdir="LR" bk.dot -o bk.svg
-  void printDotToStdout() const {
+  void printDotToStdout() const
+  {
     if (root)
       printDotToStdout(*root);
   }
@@ -324,6 +349,7 @@ private:
 
 // Convenience construction helper for type deduction; see BKTree's constructor.
 template <typename InputIt, typename Distance>
-auto makeBKTree(InputIt first, InputIt last, const Distance& distance = Distance()) {
+auto makeBKTree(InputIt first, InputIt last, const Distance& distance = Distance())
+{
   return BKTree<typename std::iterator_traits<InputIt>::value_type, Distance>{first, last, distance};
 }

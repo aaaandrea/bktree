@@ -36,7 +36,7 @@ int main()
     int result = levenshtein_distance(string1, string2);
     std::cout << result << "\n";
 
-    std::vector<std::string> dictionary = {"beep", "boop", "glop", "gravy", "beet"};
+    std::vector<std::string> dictionary = {"beep", "boop", "bing", "bong", "beet", "jingle", "jangle", "bee", "best", "peep", "belt"};
 
     // try finding an iterator that goes through a txt file
 
