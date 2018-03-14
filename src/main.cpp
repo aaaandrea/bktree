@@ -5,7 +5,8 @@
 #include <vector>
 
 // need to provide these in order to allow printDotToStdout to print string instead of int
-template <> struct StdoutRep<std::string> {
+template <> struct StdoutRep<std::string>
+{
   StdoutRep(std::string v) : value(v) {}
 
   friend std::ostream& operator<<(std::ostream& out, StdoutRep rep) {
@@ -15,7 +16,8 @@ template <> struct StdoutRep<std::string> {
   const std::string value;
 };
 
-template <> struct StdoutRep<int> {
+template <> struct StdoutRep<int>
+{
   StdoutRep(int v) : value(v) {}
 
   friend std::ostream& operator<<(std::ostream& out, StdoutRep rep) {
