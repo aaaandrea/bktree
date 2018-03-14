@@ -29,13 +29,6 @@ template <> struct StdoutRep<int>
 
 int main()
 {
-    // calculate lev btwwn 2 strings
-    std::string string1 = "beep";
-    std::string string2 = "boop";
-
-    int result = levenshtein_distance(string1, string2);
-    std::cout << result << "\n";
-
     std::vector<std::string> dictionary = {"beep", "boop", "bing", "bong", "beet", "jingle", "jangle", "bee", "best", "peep", "belt"};
 
     // try finding an iterator that goes through a txt file
