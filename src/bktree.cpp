@@ -327,8 +327,3 @@ template <typename InputIt, typename Distance>
 auto makeBKTree(InputIt first, InputIt last, const Distance& distance = Distance()) {
   return BKTree<typename std::iterator_traits<InputIt>::value_type, Distance>{first, last, distance};
 }
-
-
-int main() {
-    return 0;
-}
