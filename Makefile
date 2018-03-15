@@ -1,43 +1,21 @@
-CC=gcc -fPIC
-ARCHIVE=ar rcs
-INCLUDES= -I./src -I./test
-SOURCES= $(shell echo src/*.c)
-HEADERS= $(shell echo src/*.h)
-OBJECTS= $(SOURCES:.c=.o)
+default: build query build_wchr query_wchr
 
-default: bench shared static test
+%.o: %.cpp
+	clang++ -std=c++14
 
-# Creates the benchmark utility executable.
-bench: benchmark/bench.o $(OBJECTS)
-	$(CC) -o benchmark/bench benchmark/bench.o $(OBJECTS) $(INCLUDES)
+build: main.o
+	clang++ -std=c++14 -O3 -lm -o main main.o
 
-# Creates a benchmark utility executable to be tested by valgrind.
-bench-test: benchmark/bench.o $(OBJECTS)
-	$(CC) -g -o benchmark/bench benchmark/bench.o $(OBJECTS) $(INCLUDES)
+# build_wchr: build_wchr.o
+# 	clang++ -std=c++14 -O3 -lm -o build_wchr build_wchr.o
 
-# Creates and runs the tests for BK String
-test: test/test.o $(OBJECTS)
-	$(CC) -o test/test test/test.o $(OBJECTS) $(INCLUDES)
-	test/test
-
-# Creates shared .so library.
-shared: $(OBJECTS)
-	$(CC) -o build/libbkstring.so -shared $(OBJECTS) $(INCLUDES)
-
-# Creates static .a library.
-static: $(OBJECTS)
-	$(ARCHIVE) build/libbkstring.a $(OBJECTS)
-	cp $(HEADERS) build
-
-# Compiles the object libraries to be linked during make.
-%.o: %.c $(HEADERS)
-	$(CC) -c $(INCLUDES) $< -o $@
+# query: query.o
+# 	clang++ -std=c++14 -O3 -lm -o query query.o
+#
+# query_wchr: query_wchr.o
+# 	clang++ -std=c++14 -O3 -lm -o query_wchr query_wchr.o
 
 clean:
-	-rm -f src/*.o
-	-rm -f test/*.o
-	-rm -f benchmark/*.o
-	-rm -f test/test
-	-rm -f benchmark/bench
-	-rm -f src/bkstring.so
-	-rm -f build/*
+	-rm -f *.o
+	-rm -f *.d
+	-rm -f build query build_wchr quiry_wchr
