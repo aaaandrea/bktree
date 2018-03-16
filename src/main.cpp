@@ -1,8 +1,10 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
 #include "bktree.cpp"
 #include "levenshtein.cpp"
 
-#include <iostream>
-#include <vector>
 
 // need to provide these in order to allow printDotToStdout to print string instead of int
 template <> struct StdoutRep<std::string>
@@ -27,13 +29,36 @@ template <> struct StdoutRep<int>
   const int value;
 };
 
-int main()
+int main(int argc, char *argv[])
 {
-    std::vector<std::string> dictionary = {"beep", "boop", "bing", "bong", "beet", "jingle", "jangle", "bee", "best", "peep", "belt"};
+    if (argc < 2) {
+        std::cout << "usage: build <word-list>" << std::endl;
+        return 1;
+    }
+
+    std::string dictionary(argv[1]);
+    std::string db_file("db/" + dictionary + ".db");
+    std::string dictionary_file(dictionary + "-words.txt");
+
+    // Create a BK db
+    auto tree = makeBKTree(dictionary.begin(), dictionary.end(), levenshtein_distance);
 
     // try finding an iterator that goes through a txt file
 
-    auto tree = makeBKTree(dictionary.begin(), dictionary.end(), levenshtein_distance);
+    std::string line;
+    std::ifstream myfile(dictionary_file);
+    if (myfile.is_open()) {
+        while (getline(myfile,line)) {
+            // dbw.insert(line);
+            break;
+        }
+        myfile.close();
+    } else {
+        std::cout << "Unable to open input file" << std::endl;
+        return 1;
+    }
+    // dbw.close();
+
     tree.printDotToStdout();
 
     return 0;
