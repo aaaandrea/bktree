@@ -19,7 +19,7 @@ void load_tree()
 
 }
 
-void lookup()
+bool lookup()
 {
     std::vector<std::string> dictionary = {"beep", "boop", "bing", "bong", "beet", "jingle", "jangle", "bee", "best", "peep", "belt"};
     std::string value = "beep"
