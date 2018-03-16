@@ -1,4 +1,4 @@
-default: build query build_wchr query_wchr
+default: build
 
 %.o: %.cpp
 	clang++ -std=c++14
