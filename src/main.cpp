@@ -37,27 +37,35 @@ int main(int argc, char *argv[])
     }
 
     std::string dictionary(argv[1]);
-    std::string db_file("db/" + dictionary + ".db");
     std::string dictionary_file(dictionary + "-words.txt");
 
     // Create a BK db
-    auto tree = makeBKTree(dictionary.begin(), dictionary.end(), levenshtein_distance);
-
     // try finding an iterator that goes through a txt file
+
+    auto tree = makeBKTree<std::string>(levenshtein_distance);
 
     std::string line;
     std::ifstream myfile(dictionary_file);
     if (myfile.is_open()) {
         while (getline(myfile,line)) {
-            // dbw.insert(line);
-            break;
+            tree.insert(line);
         }
+        tree.sort();
         myfile.close();
     } else {
         std::cout << "Unable to open input file" << std::endl;
         return 1;
     }
-    // dbw.close();
+
+    std::vector<std::string> matches;
+
+    tree.nearest("beep", 2, std::back_inserter(matches));
+
+    std::cout << matches.size() << std::endl;
+
+    for (auto item:matches) {
+        std::cout << item << std::endl;
+    }
 
     tree.printDotToStdout();
 

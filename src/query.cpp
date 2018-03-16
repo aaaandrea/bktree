@@ -41,8 +41,31 @@ int main(int argc, char *argv[]) {
     t2f.close();
 
     // Open the database for reading. ******************
-    // simstring::reader dbr; CREATE DB READER FOR BKß
-    // dbr.open(db_file);
+    if (argc < 2) {
+        std::cout << "usage: build <word-list>" << std::endl;
+        return 1;
+    }
+
+    std::string dictionary(argv[1]);
+    std::string dictionary_file(dictionary + "-words.txt");
+
+    // Create a BK db
+    // try finding an iterator that goes through a txt file
+
+    auto tree = makeBKTree<std::string>(levenshtein_distance);
+
+    std::string line;
+    std::ifstream myfile(dictionary_file);
+    if (myfile.is_open()) {
+        while (getline(myfile,line)) {
+            tree.insert(line);
+        }
+        tree.sort();
+        myfile.close();
+    } else {
+        std::cout << "Unable to open input file" << std::endl;
+        return 1;
+    }
 
     std::vector<std::string> matches, filtered_matches;
     std::chrono::high_resolution_clock::time_point start, end;
