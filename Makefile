@@ -1,10 +1,7 @@
-default: build
+default: a.out
 
-%.o: %.cpp
-	clang++ -std=c++14
-
-build: main.o
-	clang++ -std=c++14 -O3 -lm -o main main.o
+a.out: src/main.cpp src/bktree.cpp
+	clang++ -std=c++14 -O3 src/main.cpp
 
 # build_wchr: build_wchr.o
 # 	clang++ -std=c++14 -O3 -lm -o build_wchr build_wchr.o
@@ -18,4 +15,4 @@ build: main.o
 clean:
 	-rm -f *.o
 	-rm -f *.d
-	-rm -f build query build_wchr quiry_wchr
+	-rm -f build query

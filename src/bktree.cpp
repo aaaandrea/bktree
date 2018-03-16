@@ -116,23 +116,6 @@ private:
     Children children;
   };
 
-  // Inserting values happens one at a time: traverse the tree and follow edges
-  // where the edge representation is equal to d(node.value, value). If there is
-  // no such edge insert a new child. Otherwise recurse down the tree.
-  //
-  // Note: insertion temporarily violates the pre-conditions for querying, i.e.
-  // edge representations need to be sorted for binary search. To restore the
-  // pre-conditions sort() must be called. Inserting all values and sorting
-  // afterwards avoids us having to re-sort after inserting each value.
-
-  void insert(T value)
-  {
-    if (root)
-      insert(*root, std::move(value));
-    else
-      root = std::make_unique<Node>(std::move(value));
-  }
-
   template <typename InputIt> void insert(InputIt first, InputIt last) {
     std::for_each(first, last, [this](auto v) { this->insert(v); });
   }
@@ -159,31 +142,6 @@ private:
         next->children.push_back(Node{std::move(value)});
       } else {
         auto at = std::distance(begin(next->edges), it);
-        recursion.push(&next->children[at]);
-      }
-    }
-  }
-
-  // Sorting the tree is required for doing binary searches on the edge representations.
-  // Needs to be called after bulk-insertion and before querying for nearest neighbors.
-  // Walks the tree recursively sorting all node's childrens by edge representation.
-  void sort()
-  {
-    if (!root)
-      return;
-
-    std::stack<Node*> recursion;
-    recursion.push(root.get());
-
-    while (!recursion.empty())
-    {
-      auto next = recursion.top();
-      recursion.pop();
-
-      next->sort();
-
-      for (std::size_t at = 0; at < next->edges.size(); ++at)
-      {
         recursion.push(&next->children[at]);
       }
     }
@@ -298,6 +256,11 @@ public:
     sort();
   }
 
+  BKTree(const Distance& distance_ = Distance()) : distance{distance_}
+  {
+
+  }
+
   // Queries the BK-Tree for items with a distance of at most delta away from value.
   // Writes results into out. Results are not sorted by distance.
   template <typename OutputIt> //
@@ -327,6 +290,48 @@ public:
     std::copy_n(begin(near), n, out);
   }
 
+  // Inserting values happens one at a time: traverse the tree and follow edges
+  // where the edge representation is equal to d(node.value, value). If there is
+  // no such edge insert a new child. Otherwise recurse down the tree.
+  //
+  // Note: insertion temporarily violates the pre-conditions for querying, i.e.
+  // edge representations need to be sorted for binary search. To restore the
+  // pre-conditions sort() must be called. Inserting all values and sorting
+  // afterwards avoids us having to re-sort after inserting each value.
+
+  void insert(T value)
+  {
+    if (root)
+      insert(*root, std::move(value));
+    else
+      root = std::make_unique<Node>(std::move(value));
+  }
+
+  // Sorting the tree is required for doing binary searches on the edge representations.
+  // Needs to be called after bulk-insertion and before querying for nearest neighbors.
+  // Walks the tree recursively sorting all node's childrens by edge representation.
+  void sort()
+  {
+    if (!root)
+      return;
+
+    std::stack<Node*> recursion;
+    recursion.push(root.get());
+
+    while (!recursion.empty())
+    {
+      auto next = recursion.top();
+      recursion.pop();
+
+      next->sort();
+
+      for (std::size_t at = 0; at < next->edges.size(); ++at)
+      {
+        recursion.push(&next->children[at]);
+      }
+    }
+  }
+
   // Outputs the BK-Tree to stdout.
   void printTextToStdout() const
   {
@@ -352,4 +357,10 @@ template <typename InputIt, typename Distance>
 auto makeBKTree(InputIt first, InputIt last, const Distance& distance = Distance())
 {
   return BKTree<typename std::iterator_traits<InputIt>::value_type, Distance>{first, last, distance};
+}
+
+template<typename T, typename Distance>
+auto makeBKTree(const Distance& distance = Distance())
+{
+  return BKTree<T, Distance>{distance};
 }
