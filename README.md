@@ -6,14 +6,8 @@ Using a basic Levenshtein Distance calculation.
 
 To run this code:
 ```
-# clone SimString and build it
-$ git clone https://github.com/chokkan/simstring.git
-$ cd simstring
-$ ./autogen.sh
-$ ./configure
-$ make
-$ cd ..
-
-# make the test code
+# clone BKTree and build it
+$ git clone https://github.com/aaaandrea/bktree.git
+$ cd bktree
 $ make
 ```
