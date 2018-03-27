@@ -10,7 +10,7 @@
 #include "bktree.cpp"
 #include "main.cpp"
 
-int main(int argc, char *argv[]) {
+int query(int argc, char *argv[]) {
     if (argc < 2) {
         std::cout << "usage: build <word-list>" << std::endl;
         return 1;
@@ -54,11 +54,11 @@ int main(int argc, char *argv[]) {
 
     auto tree = makeBKTree<std::string>(levenshtein_distance);
 
-    std::string line;
+    std::string newline;
     std::ifstream myfile(dictionary_file);
     if (myfile.is_open()) {
-        while (getline(myfile,line)) {
-            tree.insert(line);
+        while (getline(myfile,newline)) {
+            tree.insert(newline);
         }
         tree.sort();
         myfile.close();
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        dbr.retrieve(std::get<0>(*it), simstring::jaccard, 1, std::back_inserter(matches));
+        tree.retrieve(std::get<0>(*it), 1, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        dbr.retrieve(std::get<1>(*it), simstring::jaccard, 1, std::back_inserter(matches));
+        tree.retrieve(std::get<1>(*it), 1, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        dbr.retrieve(std::get<1>(*it), simstring::jaccard, 0.6, std::back_inserter(matches));
+        tree.retrieve(std::get<1>(*it), 0.6, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
         filtered_matches.clear();
-        dbr.retrieve(std::get<1>(*it), simstring::jaccard, 0.5, std::back_inserter(matches));
+        tree.retrieve(std::get<1>(*it), 0.5, std::back_inserter(matches));
         for (auto const& m: matches) {
             if (levenshtein_distance(m, std::get<1>(*it)) <= 1) {
                 filtered_matches.push_back(m);
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
 
     for (auto it = typo2.begin(); it != typo2.end(); ++it) {
         matches.clear();
-        dbr.retrieve(std::get<1>(*it), simstring::jaccard, 0.4, std::back_inserter(matches));
+        tree.retrieve(std::get<1>(*it), 0.4, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
         filtered_matches.clear();
-        dbr.retrieve(std::get<1>(*it), simstring::jaccard, 0.4, std::back_inserter(matches));
+        tree.retrieve(std::get<1>(*it), 0.4, std::back_inserter(matches));
         for (auto const& m: matches) {
             if (levenshtein_distance(m, std::get<1>(*it)) <= 2) {
                 filtered_matches.push_back(m);
