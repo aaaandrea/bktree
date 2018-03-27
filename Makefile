@@ -13,6 +13,4 @@ a.out: src/main.cpp src/bktree.cpp
 # 	clang++ -std=c++14 -O3 -lm -o query_wchr query_wchr.o
 
 clean:
-	-rm -f *.o
-	-rm -f *.d
-	-rm -f build query
+	-rm -f *.out
