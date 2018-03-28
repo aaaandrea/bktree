@@ -1,6 +1,6 @@
 #include <iostream>
 #include <numeric>
-#include "../src/main.cpp"
+#include "../src/exploratory.cpp"
 
 bool build_bktree()
 {

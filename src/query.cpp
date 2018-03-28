@@ -8,7 +8,6 @@
 #include <chrono>
 #include "levenshtein.cpp"
 #include "bktree.cpp"
-#include "main.cpp"
 
 int query(int argc, char *argv[]) {
     if (argc < 2) {
