@@ -3,7 +3,7 @@
 #include <iostream>
 #include <numeric>
 
-int levenshtein_distance(const std::string &s1, const std::string &s2)
+double levenshtein_distance(const std::string &s1, const std::string &s2)
 {
 	// To change the type this function manipulates and returns, change
 	// the return type and the types of the two variables below.
