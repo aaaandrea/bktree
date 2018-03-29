@@ -10,4 +10,4 @@ exploratory.o: exploratory.cpp src/bktree.cpp src/levenshtein.cpp
 	clang++ -std=c++14 -O3 -lm -o exploratory.o src/exploratory.cpp
 
 clean:
-	-rn -f *.o
+	-rm -f *.o

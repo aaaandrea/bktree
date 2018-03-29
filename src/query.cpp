@@ -9,7 +9,7 @@
 #include "levenshtein.cpp"
 #include "bktree.cpp"
 
-int query(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     if (argc < 2) {
         std::cout << "usage: build <word-list>" << std::endl;
         return 1;
@@ -80,7 +80,7 @@ int query(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        tree.retrieve(std::get<0>(*it), 1, std::back_inserter(matches));
+        tree.nearest(std::get<0>(*it), 1, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -101,7 +101,7 @@ int query(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        tree.retrieve(std::get<1>(*it), 1, std::back_inserter(matches));
+        tree.nearest(std::get<1>(*it), 1, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -120,7 +120,7 @@ int query(int argc, char *argv[]) {
 
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
-        tree.retrieve(std::get<1>(*it), 0.6, std::back_inserter(matches));
+        tree.nearest(std::get<1>(*it), 0.6, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -140,7 +140,7 @@ int query(int argc, char *argv[]) {
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
         filtered_matches.clear();
-        tree.retrieve(std::get<1>(*it), 0.5, std::back_inserter(matches));
+        tree.nearest(std::get<1>(*it), 0.5, std::back_inserter(matches));
         for (auto const& m: matches) {
             if (levenshtein_distance(m, std::get<1>(*it)) <= 1) {
                 filtered_matches.push_back(m);
@@ -164,7 +164,7 @@ int query(int argc, char *argv[]) {
 
     for (auto it = typo2.begin(); it != typo2.end(); ++it) {
         matches.clear();
-        tree.retrieve(std::get<1>(*it), 0.4, std::back_inserter(matches));
+        tree.nearest(std::get<1>(*it), 0.4, std::back_inserter(matches));
     }
 
     end  = std::chrono::high_resolution_clock::now();
@@ -184,7 +184,7 @@ int query(int argc, char *argv[]) {
     for (auto it = typo1.begin(); it != typo1.end(); ++it) {
         matches.clear();
         filtered_matches.clear();
-        tree.retrieve(std::get<1>(*it), 0.4, std::back_inserter(matches));
+        tree.nearest(std::get<1>(*it), 0.4, std::back_inserter(matches));
         for (auto const& m: matches) {
             if (levenshtein_distance(m, std::get<1>(*it)) <= 2) {
                 filtered_matches.push_back(m);
