@@ -53,11 +53,16 @@ int main(int argc, char *argv[]) {
 
     auto tree = makeBKTree<std::string>(levenshtein_distance);
 
+    double number_of_nodes = 0;
+    double node_size = 0;
     std::string newline;
     std::ifstream myfile(dictionary_file);
+
     if (myfile.is_open()) {
         while (getline(myfile,newline)) {
             tree.insert(newline);
+            node_size = sizeof(newline);
+            number_of_nodes += 1;
         }
         tree.sort();
         myfile.close();
@@ -69,6 +74,14 @@ int main(int argc, char *argv[]) {
     std::vector<std::string> matches, filtered_matches;
     std::chrono::high_resolution_clock::time_point start, end;
     std::chrono::duration<double> seconds;
+
+    // *************************************************************************
+
+    // log structure size
+    double tree_size = node_size * number_of_nodes;
+    tree_size /= 1048576;
+    std::cout << "tree size: " << tree_size << " Megabytes \n";
+
 
     // *************************************************************************
 

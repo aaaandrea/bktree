@@ -6,6 +6,7 @@ It is a graph tree structure, with nodes and edges, based on metric space. The s
 The [handiwork](https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a) is in C++. It was fairly straightforward, so I would not expect our implemetnation to be particularly challenging.
 
 ### Structure size
+???
 
 ### Sample
 `query.cpp` builds a BK Tree and loads it with the records of a given file.
@@ -21,7 +22,13 @@ The query eval:
 - Build time:
 - Load time:
 - On-disk structure: No.
+- Structure size:
+- Memory usage:
 - Query time:
+```
+$ ./query.o us-address
+$ ./query.o europen-place
+```
 
 ### Features
 - - Stores non-Latin text?
