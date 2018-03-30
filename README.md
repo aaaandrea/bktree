@@ -4,10 +4,18 @@ BK implementation taken from [here](https://daniel-j-h.github.io/post/nearest-ne
 Using a basic Levenshtein Distance calculation.
 
 
-To run this code:
+To build:
+
 ```
 # clone BKTree and build it
 $ git clone https://github.com/aaaandrea/bktree.git
 $ cd bktree
 $ make
+```
+
+To query:
+eg. query a structure built with a file titles `us-address-words.txt`
+
+```
+$ query.o us-address
 ```
