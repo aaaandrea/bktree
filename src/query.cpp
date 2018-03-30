@@ -17,8 +17,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     std::string word_list(argv[1]);
-    std::string db_file("db/" + word_list + ".db");
-
     std::string line;
 
     // read the edit-distance-1 typos into a vector of (correct, incorrect) pairs
