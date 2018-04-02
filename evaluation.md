@@ -22,12 +22,39 @@ The query eval:
 - Build time:
 - Load time:
 - On-disk structure: No.
-- Structure size:
+- Structure size: ~12MB
 - Memory usage:
 - Query time:
 ```
 $ ./query.o us-address
+tree size: 12.8524 Megabytes
+starting exact lookup...
+exact lookup took 0.611254 seconds (1.63598e+06 lookups/sec, 0.000611254ms/lookup)
+starting exact-failure lookup...
+exact-failure lookup took 0.639069 seconds (1.56478e+06 lookups/sec, 0.000639069ms/lookup)
+starting edit-distance-1 lookup...
+edit-distance-1 lookup took 1.10268 seconds (906885 lookups/sec, 0.00110268ms/lookup)
+starting edit-distance-1+levenshtein-filter lookup...
+edit-distance-1+levenshtein-filter lookup took 1.07771 seconds (927894 lookups/sec, 0.00107771ms/lookup)
+starting edit-distance-2 lookup...
+edit-distance-2 lookup took 24.2244 seconds (41280.7 lookups/sec, 0.0242244ms/lookup)
+starting edit-distance-2+levenshtein-filter lookup...
+edit-distance-2+levenshtein-filter lookup took 20.1692 seconds (49580.6 lookups/sec, 0.0201692ms/lookup)
+
 $ ./query.o europen-place
+tree size: 9.68394 Megabytes
+starting exact lookup...
+exact lookup took 0.744637 seconds (1.34294e+06 lookups/sec, 0.000744637ms/lookup)
+starting exact-failure lookup...
+exact-failure lookup took 0.730214 seconds (1.36946e+06 lookups/sec, 0.000730214ms/lookup)
+starting edit-distance-1 lookup...
+edit-distance-1 lookup took 1.38088 seconds (724177 lookups/sec, 0.00138088ms/lookup)
+starting edit-distance-1+levenshtein-filter lookup...
+edit-distance-1+levenshtein-filter lookup took 1.40078 seconds (713889 lookups/sec, 0.00140078ms/lookup)
+starting edit-distance-2 lookup...
+edit-distance-2 lookup took 7.68356 seconds (130148 lookups/sec, 0.00768356ms/lookup)
+starting edit-distance-2+levenshtein-filter lookup...
+edit-distance-2+levenshtein-filter lookup took 8.49118 seconds (117769 lookups/sec, 0.00849118ms/lookup)
 ```
 
 ### Features
