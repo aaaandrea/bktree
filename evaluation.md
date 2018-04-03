@@ -5,7 +5,15 @@ The BK Tree a graph tree structure, with nodes and edges, based on metric space.
 Nodes in a BK Tree consist of a single root item and arbitrary subtrees with distance labels on its edges. In constructing a BK Tree you take an arbitrary item in the database and set that as the root node. Inserting happens one at a time by traversing the tree, and following edges labeled `distance(node, item)`. If there is no such edge inset a new child. Otherwise recurse down the tree.
 
 ### Technology
-The [handiwork](https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a) for building a BK Tree is in C++. It was fairly straightforward, so I would not expect our implemetnation to be particularly challenging.
+There were a few implementations I checked out before deciding:
+- JavaScript npm package: https://www.npmjs.com/package/bktree
+- C++ BK Tree:
+- https://github.com/TeamHG-Memex/bk-string - has errors
+- https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a
+- “C++ performant” python-module: https://github.com/fake-name/IntraArchiveDeduplicator/tree/master/deduplicator
+- Rust BK Tree: https://github.com/eugene-bulkin/rust-bk-tree
+
+The [handiwork](https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a) for building a BK Tree is in C++. It was fairly straightforward, so I would not expect our implementation to be particularly challenging. C++ also promised to be a bit faster than the JS package, and I don't know Rust.
 
 ### Structure size
 I took the approximate size of a node, and multiplied that by the number of nodes. For the US index the size was 12.8524 Megabytes. The European index was 9.68394 Megabytes.
