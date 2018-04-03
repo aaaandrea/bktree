@@ -48,18 +48,37 @@ int main(int argc, char *argv[]) {
     std::string dictionary(argv[1]);
     std::string dictionary_file(dictionary + "-words.txt");
 
+    std::vector<std::string> matches, filtered_matches;
+    std::chrono::high_resolution_clock::time_point start, end;
+    std::chrono::duration<double> seconds;
     // Create a BK db
     // try finding an iterator that goes through a txt file
+    std::cout << "starting BK Tree build..." << std::endl;
+    start  = std::chrono::high_resolution_clock::now();
 
     auto tree = makeBKTree<std::string>(levenshtein_distance);
+
+    end  = std::chrono::high_resolution_clock::now();
+    seconds = end - start;
+    std::cout << "BK Tree build time was " <<
+        seconds.count() << " seconds (" <<
+        (1000000./seconds.count()) << " lookups/sec, " <<
+        (seconds.count() / 1000) << "ms/lookup)" << std::endl;
+
+    std::cout << "starting BK Tree load..." << std::endl;
+    start  = std::chrono::high_resolution_clock::now();
 
     double number_of_nodes = 0;
     double node_size = 0;
     std::string newline;
     std::ifstream myfile(dictionary_file);
+    std::string non_latin_char;
 
     if (myfile.is_open()) {
         while (getline(myfile,newline)) {
+            if (newline == "京") {
+                non_latin_char = sizeof(newline);
+            }
             tree.insert(newline);
             node_size = sizeof(newline);
             number_of_nodes += 1;
@@ -71,17 +90,23 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::vector<std::string> matches, filtered_matches;
-    std::chrono::high_resolution_clock::time_point start, end;
-    std::chrono::duration<double> seconds;
+    end  = std::chrono::high_resolution_clock::now();
+    seconds = end - start;
+    std::cout << "BK Tree load time was " <<
+        seconds.count() << " seconds (" <<
+        (1000000./seconds.count()) << " lookups/sec, " <<
+        (seconds.count() / 1000) << "ms/lookup)" << std::endl;
 
     // *************************************************************************
 
     // log structure size
-    double tree_size = node_size * number_of_nodes;
-    tree_size /= 1048576;
-    std::cout << "tree size: " << tree_size << " Megabytes \n";
+    // std::cout << "京 size: " << non_latin_char << "Megabytes \n";
+    node_size /= 1048576;
+    std::cout << "node size: " << node_size << " Megabytes \n";
+    std::cout << "number of nodes: " << number_of_nodes << "\n";
 
+    double tree_size = node_size * number_of_nodes;
+    std::cout << "tree size: " << tree_size << " Megabytes \n";
 
     // *************************************************************************
 
