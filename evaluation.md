@@ -8,8 +8,8 @@ Nodes in a BK Tree consist of a single root item and arbitrary subtrees with dis
 There were a few implementations I checked out before deciding:
 - JavaScript npm package: https://www.npmjs.com/package/bktree
 - C++ BK Tree:
-- https://github.com/TeamHG-Memex/bk-string - has errors
-- https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a
+    - https://github.com/TeamHG-Memex/bk-string - has errors
+    - https://gist.github.com/daniel-j-h/8418cd89789c3fe611a8362161d86a6a
 - “C++ performant” python-module: https://github.com/fake-name/IntraArchiveDeduplicator/tree/master/deduplicator
 - Rust BK Tree: https://github.com/eugene-bulkin/rust-bk-tree
 
